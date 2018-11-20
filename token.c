@@ -60,10 +60,16 @@ int getNum (Token* T) {
     char c;
     int x = fscanf(ts, "%c", &c);
     if (x != 1) return NOIN;
-    if ((c-'0' < 0 || c-'9' > 0) && c != '(' && c != ')')
+    if ((c-'0' < 0 || c-'9' > 0) && c != '+' && c != '-' && c != '(')
         return UXIN;
     if (c == '(') *T = createOp(c);
     else {
+        if (c == '+' || c == '-') {
+            char d;
+            fscanf(ts, "%c", &d);
+            if (d-'0' < 0 || d-'9' > 0) return UXIN;
+            ungetc(d,ts);
+        }
         ungetc(c,ts);
         double d;
         fscanf(ts, "%lf", &d);
