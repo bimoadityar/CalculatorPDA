@@ -50,7 +50,7 @@ int getNum (Token* T) {
     char c;
     int x = fscanf(ts, "%c", &c);
     if (x != 1) return NOIN;
-    if ((c-'0' < 0 || c-'9' > 0) && c != '(' && c != ')') return UXIN;
+    if ((c-'0' < 0 || c-'9' > 0) && c != '(' && c != ')' && c != '+' && c != '-') return UXIN;
     if (c == '(' || c == ')') *T = createOp(c);
     else {
         ungetc(c,ts);
