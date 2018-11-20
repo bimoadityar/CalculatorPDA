@@ -9,7 +9,7 @@ Token readToken() {
 	char S[100];
 	Token Temp;
 	scanf("%s", S);
-	if ((strcmp(S, "+") != 0) && (strcmp(S, "-") != 0) && (strcmp(S, "*") != 0)	&& (strcmp(S, "/") != 0) && (strcmp(S, "^") != 0) && (strcmp(S, ".") != 0)) {
+	if ((strcmp(S, "+") != 0) && (strcmp(S, "-") != 0) && (strcmp(S, "*") != 0)	&& (strcmp(S, "/") != 0) && (strcmp(S, "^") != 0) && (strcmp(S, "=") != 0)) {
 		op(Temp) = 'n';
 		val(Temp) = atof(S);
 	} else {
@@ -31,22 +31,22 @@ int getPrecedence(Token Tkn) {
 	}
 }
 
-
 Token currTkn, tknHasil;
-StackToken TknStck;
+static StackToken TknStck;
 int lastPrecedence;
-double a, b;
+double a, b, temp;
 char opr;
+
 
 int main() {
 	CreateEmpty(&TknStck);
 	lastPrecedence = 0;
-	currTkn = readToken();
-	while (op(currTkn) != '.') {
+	do {
+		currTkn = readToken();
 		if (op(currTkn) == 'n') {
 			PushStack(&TknStck, currTkn);
 		} else {
-			if (getPrecedence(currTkn) > lastPrecedence) {
+			if ((getPrecedence(currTkn) > lastPrecedence) || (lastPrecedence == 3 && getPrecedence(currTkn) == 3)) {
 				PushStack(&TknStck, currTkn);
 				lastPrecedence = getPrecedence(currTkn);
 			} else {
@@ -55,16 +55,16 @@ int main() {
 				b = val(PopStack(&TknStck));
 				if (opr == '+') {
 					op(tknHasil) = 'n';
-					val(tknHasil) = a + b;
+					val(tknHasil) = b + a;
 				} else if (opr == '-') {
 					op(tknHasil) = 'n';
-					val(tknHasil) = a - b;
+					val(tknHasil) = b - a;
 				} else if (opr == '*') {
 					op(tknHasil) = 'n';
-					val(tknHasil) = a * b;
+					val(tknHasil) = b * a;
 				} else if (opr == '/') {
 					op(tknHasil) = 'n';
-					val(tknHasil) = a / b;
+					val(tknHasil) = b / a;
 				} else if (opr == '^') {
 					op(tknHasil) = 'n';
 					val(tknHasil) = pow(b, a);
@@ -81,16 +81,20 @@ int main() {
 						b = val(PopStack(&TknStck));
 						if (opr == '+') {
 							op(tknHasil) = 'n';
-							val(tknHasil) += b;
+							temp = b + val(tknHasil);
+							val(tknHasil) = temp;
 						} else if (opr == '-') {
 							op(tknHasil) = 'n';
-							val(tknHasil) -= b;
+							temp = b - val(tknHasil);
+							val(tknHasil) = temp;
 						} else if (opr == '*') {
 							op(tknHasil) = 'n';
-							val(tknHasil) *= b;
+							temp = b * val(tknHasil);
+							val(tknHasil) = temp;
 						} else if (opr == '/') {
 							op(tknHasil) = 'n';
-							val(tknHasil) /= b;
+							temp = b / val(tknHasil);
+							val(tknHasil) = temp;
 						} else if (opr == '^') {
 							op(tknHasil) = 'n';
 							val(tknHasil) = pow(b, val(tknHasil));
@@ -106,7 +110,8 @@ int main() {
 		}
 		printf("lastPrecedence : %d\n", lastPrecedence);
 		printStack(TknStck);
-		currTkn = readToken();
-	}
+	} while (op(currTkn) != '=');
+	PopStack(&TknStck);
+	printf("Hasil = %lf\n", val(PopStack(&TknStck)));
 	return 0;
 }
