@@ -27,6 +27,7 @@ extern FILE* ts;
 
 void stopTokenStream ();
 void setTokenStream ();
+void ignoreBlank ();
 
 #define SUCC 0
 #define NOIN 1

@@ -35,8 +35,17 @@ void setTokenStream () {
     ts = fopen("stream.txt", "r");
 }
 
+void ignoreBlank () {
+    char c;
+    int x;
+    do {
+        x = fscanf(ts, "%c", &c);
+    } while (x == 1 && c == ' ');
+    if (x == 1) ungetc(c,ts);
+}
 
 int getOp (Token* T) {
+    ignoreBlank();
     char opt;
     int x = fscanf(ts, "%c", &opt);
     if (x != 1) return NOIN;
@@ -47,10 +56,12 @@ int getOp (Token* T) {
 }
 
 int getNum (Token* T) {
+    ignoreBlank();
     char c;
     int x = fscanf(ts, "%c", &c);
     if (x != 1) return NOIN;
-    if ((c-'0' < 0 || c-'9' > 0) && c != '(' && c != ')' && c != '+' && c != '-') return UXIN;
+    if ((c-'0' < 0 || c-'9' > 0) && c != '+' && c != '-' && c != '(' && c != ')')
+        return UXIN;
     if (c == '(' || c == ')') *T = createOp(c);
     else {
         ungetc(c,ts);
