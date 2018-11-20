@@ -49,9 +49,14 @@ int getOp (Token* T) {
     char opt;
     int x = fscanf(ts, "%c", &opt);
     if (x != 1) return NOIN;
-    if (opt != '+' && opt != '-' && opt != '*' && opt != '/' && opt != '^' && opt != ')')
+    if (opt != '+' && opt != '-' && opt != '*' && opt != '/' && opt != '^' && opt != ')' && (opt-'0' < 0 || opt-'9' > 0) && opt != '(')
         return UXIN;
-    *T = createOp(opt);
+    if (opt-'0' >= 0 && opt-'9' <= 0) {
+        ungetc(opt,ts);
+        double d;
+        fscanf(ts,"%lf",&d);
+        *T = createNum(d);
+    } else *T = createOp(opt);
     return SUCC;
 }
 
