@@ -16,9 +16,6 @@ typedef struct {
 #define op(T) (T).op
 #define val(T) (T).val
 
-
-
-
 Token createOp (char opt);
 Token createNum (double value);
 void printToken (Token T);
