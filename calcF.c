@@ -53,13 +53,10 @@ Token computeGan() {
 	double a, b, temp;
 	char opr;
 	Token currTkn, tknHasil,x;
-	int i = 0;
+	lastPrecedence = 0;
+	boolean retVal = false;
 	do {
-		i++;
-		if (i>7){
-			break;
-		}
-		readToken(&currTkn);
+		retVal = readToken(&currTkn);
 		if (op(currTkn) == 'n') {
 			if (op(top(TknStck)) == 'n') {
 				pop(&TknStck, &x);
@@ -86,10 +83,15 @@ Token computeGan() {
 			} else {
 				pop(&TknStck, &x);
 				a = val(x);
-				pop(&TknStck, &x);
-				opr = op(x);
-				pop(&TknStck, &x);
-				b = val(x);
+				if (op(top(TknStck)) == '(') {
+					opr = '+';
+					b = 0;
+				} else {
+					pop(&TknStck, &x);
+					opr = op(x);
+					pop(&TknStck, &x);
+					b = val(x);
+				}
 				if (opr == '+') {
 					op(tknHasil) = 'n';
 					val(tknHasil) = b + a;
@@ -147,8 +149,8 @@ Token computeGan() {
 				}
 			}
 		}
-		printf("lastPrecedence : %d\n", lastPrecedence);
-		printStack(TknStck);
+		//printf("lastPrecedence : %d\n", lastPrecedence);
+		//printStack(TknStck);
 	} while (op(currTkn) != ')');
 }
 
@@ -156,16 +158,20 @@ boolean retVal;
 Token arrToken[MaxEl+1];
 int last,now;
 
-int main() {
+double compute() {
 	createEmpty(&TknStck);
+	printf(">> ");
 	setTokenStream();
-	if (parseToken() != SUCC) printf("eror gan\n");
-	else {
-		int i = 0;
+	if (parseToken() != SUCC) {
+		printf("syntax error!\n");	
+	} else {
 		lastPrecedence = 0;
 		do {
-			i++;
 			retVal = readToken(&currTkn);
+			if (!retVal) {
+				op(currTkn) = '=';
+				val(currTkn) = ValUndef;
+			}
 			if (op(currTkn) == 'n') {
 				if (op(top(TknStck)) == 'n') {
 					pop(&TknStck, &x);
@@ -192,10 +198,15 @@ int main() {
 				} else {
 					pop(&TknStck, &x);
 					a = val(x);
-					pop(&TknStck, &x);
-					opr = op(x);
-					pop(&TknStck, &x);
-					b = val(x);
+					if (isEmpty(TknStck)) {
+						opr = '+';
+						b=0;
+					}else{
+						pop(&TknStck, &x);
+						opr = op(x);
+						pop(&TknStck, &x);
+						b = val(x);
+					}
 					if (opr == '+') {
 						op(tknHasil) = 'n';
 						val(tknHasil) = b + a;
@@ -253,13 +264,29 @@ int main() {
 					}
 				}
 			}
-			printf("lastPrecedence : %d\n", lastPrecedence);
-			printStack(TknStck);
+			//printf("lastPrecedence : %d\n", lastPrecedence);
+			//printStack(TknStck);
 		} while (retVal);
 		pop(&TknStck, &x);
 		pop(&TknStck, &x);
-		printf("Hasil = %lf\n", val(x));
+		if (isnan(val(x))||val(x)==INFINITY) {
+			printf("Math error!\n");
+		} else {
+			printf("Hasil = %lf\n", val(x));
+		}
 	}
 	stopTokenStream();
+}
+
+int main() {
+	printf("***SELAMAT DATANG DI TUBES TBFO***\n");
+	printf("Kelas K1\n");
+	printf("Bimo Adityarahman Wiraputra/13517004\n");
+	printf("Hafidh Rendyanto/13517061\n")
+	printf("Naufal Aditya Dirgandhavi/13517064\n");
+	while (true) {
+		compute();		
+	}	
+	printf("Terima kasih!");
 	return 0;
 }

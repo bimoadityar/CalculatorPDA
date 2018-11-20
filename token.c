@@ -1,4 +1,5 @@
 #include "token.h"
+#include <stdlib.h>
 
 Token createOp (char opt) {
     Token T;
@@ -28,9 +29,12 @@ void stopTokenStream () {
 void setTokenStream () {
     stopTokenStream();
     ts = fopen("stream.txt", "w");
-    char* s;
-    scanf("%m[^\n]s", &s);
+    char s[100];
+    scanf("%[^\n]s", &s);
     fprintf(ts, "%s", s);
+    char c;
+    scanf("%c", &c);
+    fflush(stdin);
     fclose(ts);
     ts = fopen("stream.txt", "r");
 }

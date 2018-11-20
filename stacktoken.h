@@ -19,6 +19,6 @@ void createEmpty (StackToken* S);
 boolean isEmpty (StackToken S);
 boolean isFull (StackToken S);
 boolean push (StackToken* S, Token T);
-boolean pop (StackToken* S, Token T);
+boolean pop (StackToken* S, Token* T);
 
 #endif
