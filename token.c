@@ -21,20 +21,14 @@ void printToken (Token T) {
 
 FILE* ts;
 
-
-void stopTokenStream () {
-    if (ts != NULL) fclose(ts);
-}
-
 void setTokenStream () {
-    stopTokenStream();
+    if (ts != NULL) fclose(ts);
     ts = fopen("stream.txt", "w");
-    char s[100];
-    scanf("%[^\n]s", &s);
+    char *s;
+    scanf("%m[^\n]s", &s);
     fprintf(ts, "%s", s);
     char c;
     scanf("%c", &c);
-    fflush(stdin);
     fclose(ts);
     ts = fopen("stream.txt", "r");
 }

@@ -25,3 +25,14 @@ boolean pop (StackToken* S, Token* T) {
     --topAd(*S);
     return true;
 }
+
+void printStack (StackToken S) {
+    Token currTkn;
+    printf("[");
+    while (!isEmpty(S)) {
+
+       	pop(&S, &currTkn);
+        printf("(%c, %lf)", op(currTkn), val(currTkn));
+    }
+    printf("]\n");
+}

@@ -5,30 +5,14 @@
 #include "boolean.h"
 #include "parsetoken.h"
 
-void printStack (StackToken S) {
-    Token currTkn;
-    printf("[");
-    while (!isEmpty(S)) {
-
-       	pop(&S, &currTkn);
-        printf("(%c, %lf)", op(currTkn), val(currTkn));
-    }
-    printf("]\n");
-}
-
-/*Token readToken() {
-	char S[100];
-	Token Temp;
-	scanf("%s", S);
-	if ((strcmp(S, "+") != 0) && (strcmp(S, "-") != 0) && (strcmp(S, "*") != 0)	&& (strcmp(S, "/") != 0) && (strcmp(S, "^") != 0) && (strcmp(S, "=") != 0) && (strcmp(S, "(") != 0) && (strcmp(S, ")") != 0)) {
-		op(Temp) = 'n';
-		val(Temp) = atof(S);
-	} else {
-		op(Temp) = S[0];
-		val(Temp) = ValUndef;
-	}
-	return Temp;
-}*/
+Token currTkn, tknHasil,x;
+static StackToken TknStck;
+int lastPrecedence;
+double a, b, temp;
+char opr;
+boolean retVal;
+Token arrToken[MaxEl+1];
+int last,now;
 
 int getPrecedence(Token Tkn) {
 	if ((op(Tkn) == '+') || (op(Tkn) == '-')) {
@@ -41,14 +25,7 @@ int getPrecedence(Token Tkn) {
 		return 0;
 	}
 }
-
-Token currTkn, tknHasil,x;
-static StackToken TknStck;
-int lastPrecedence;
-double a, b, temp;
-char opr;
-
-Token computeGan() {
+Token computeGan() { //untuk dalam kurung
 	int lastPrecedence;
 	double a, b, temp;
 	char opr;
@@ -154,16 +131,12 @@ Token computeGan() {
 	} while (op(currTkn) != ')');
 }
 
-boolean retVal;
-Token arrToken[MaxEl+1];
-int last,now;
-
 double compute() {
 	createEmpty(&TknStck);
 	printf(">> ");
 	setTokenStream();
 	if (parseToken() != SUCC) {
-		printf("syntax error!\n");	
+		printf("SYNTAX ERROR\n");	
 	} else {
 		lastPrecedence = 0;
 		do {
@@ -270,23 +243,10 @@ double compute() {
 		pop(&TknStck, &x);
 		pop(&TknStck, &x);
 		if (isnan(val(x))||val(x)==INFINITY) {
-			printf("Math error!\n");
+			printf("MATH ERROR\n");
 		} else {
 			printf("Hasil = %lf\n", val(x));
 		}
 	}
-	stopTokenStream();
-}
-
-int main() {
-	printf("***SELAMAT DATANG DI TUBES TBFO***\n");
-	printf("Kelas K1\n");
-	printf("Bimo Adityarahman Wiraputra/13517004\n");
-	printf("Hafidh Rendyanto/13517061\n")
-	printf("Naufal Aditya Dirgandhavi/13517064\n");
-	while (true) {
-		compute();		
-	}	
-	printf("Terima kasih!");
-	return 0;
+	
 }

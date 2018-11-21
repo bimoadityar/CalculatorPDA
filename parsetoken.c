@@ -20,6 +20,7 @@ int parseToken () {
             else if (op(T) == ')') --openPrnth;
             if (openPrnth < 0) status = UXIN;
         }
+        if(status==NOIN && openPrnth>0) status = UXIN; 
     }
     if (status == UXIN || (op(arrToken[last]) != 'n' && op(arrToken[last]) != ')' )) status = UXIN;
     if (status == UXIN) return UXIN;
